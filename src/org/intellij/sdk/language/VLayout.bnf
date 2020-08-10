@@ -1,0 +1,182 @@
+{
+  parserClass="org.intellij.sdk.language.parser.VLayoutParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="VLayout"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.intellij.sdk.language.psi"
+  psiImplPackage="org.intellij.sdk.language.psi.impl"
+
+  elementTypeHolderClass="org.intellij.sdk.language.psi.VLayoutTypes"
+  elementTypeClass="org.intellij.sdk.language.psi.VLayoutElementType"
+  tokenTypeClass="org.intellij.sdk.language.psi.VLayoutTokenType"
+
+  psiImplUtilClass="org.intellij.sdk.language.psi.impl.VLayoutPsiImplUtil"
+
+  tokens = [
+      OP_EQ="="
+      OP_EQEQ="=="
+      OP_NEQ="!="
+      OP_ALT="|"
+      OP_OPT="?"
+      OP_PLUS="+"
+      OP_MINUS="-"
+      OP_MULTIPLY="*"
+      OP_DIVIDE="/"
+      OP_MOD="%"
+      OP_OR="||"
+      OP_AND="&&"
+      OP_NOT="!"
+      OP_COLON=":"
+      OP_COMMA=","
+      OP_DOT="."
+      OP_MORE=">"
+      OP_MORE_EQ=">="
+      OP_LESS="<"
+      OP_LESS_EQ="<="
+      LEFT_BRACE="{"
+      RIGHT_BRACE="}"
+      LEFT_PAREN="("
+      RIGHT_PAREN=")"
+      CONST_TRUE="true"
+      CONST_FALSE="false"
+      space="regexp:\s+"
+      id="regexp:\w+"
+      string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
+      number="regexp:\d+(\.\d*)?"
+      color="regexp:#([\dabcdefABCDEF]){6}"
+      line_comment="regexp://.*"
+    ]
+}
+
+VLayoutFile ::= !<<eof>> topDeclaration *
+
+topDeclaration ::= bindingsSection | typesSection | inputsSection | propertiesSection | functionsSection | layoutSection
+
+bindingsSection ::= 'bindings' LEFT_BRACE bindingDeclaration * RIGHT_BRACE
+
+bindingDeclaration ::= id OP_COLON viewType {
+    pin=1
+    recoverWhile=pairRecover
+    methods=[getKey getValue]
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutBindingDeclarationMixin"
+    implements="org.intellij.sdk.language.psi.VLayoutNamedElement"
+}
+
+private pairRecover ::= OP_COLON
+
+viewType ::= id
+
+typesSection ::= 'types' LEFT_BRACE typeDeclaration * RIGHT_BRACE
+
+typeDeclaration ::= enumDeclaration | listDeclaration
+
+enumDeclaration ::= id OP_COLON 'enum' LEFT_PAREN enumItems * RIGHT_PAREN
+
+private enumItems ::= <<comma_separated_list id>>
+
+listDeclaration ::= id OP_COLON 'list' LEFT_PAREN listPrototype * RIGHT_PAREN
+
+private listPrototype ::= <<comma_separated_list complexType>>
+
+complexType ::= id LEFT_BRACE (complexType|simpleType) * RIGHT_BRACE
+
+simpleType ::= id OP_COLON id
+
+inputsSection ::= 'inputs' LEFT_BRACE inputDeclaration * RIGHT_BRACE
+
+inputDeclaration ::= simpleInput | complexInput
+
+simpleInput ::= id OP_COLON id
+
+complexInput ::= id LEFT_BRACE inputDeclaration * RIGHT_BRACE
+
+propertiesSection ::= 'properties' LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+
+propertyDeclaration ::= simplePropertyDeclaration | complexPropertyDeclaration
+
+complexPropertyDeclaration ::= id LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+
+simplePropertyDeclaration ::= id OP_COLON expr
+
+functionsSection ::= 'functions' LEFT_BRACE functionDeclaration * RIGHT_BRACE
+
+functionDeclaration ::= id LEFT_PAREN <<comma_separated_list functionParameter>> RIGHT_PAREN '=>' expr
+
+functionParameter ::= id OP_COLON id
+
+layoutSection ::= 'layout' LEFT_BRACE (viewDeclaration | include) * RIGHT_BRACE
+
+viewDeclaration ::= id LEFT_BRACE (include|viewPropertyDeclaration|viewDeclaration) * RIGHT_BRACE
+
+viewPropertyDeclaration ::= simpleViewProperty | complexViewProperty
+
+simpleViewProperty ::= id OP_COLON expr
+
+complexViewProperty ::= propertyKey LEFT_BRACE simpleViewProperty * RIGHT_BRACE
+
+propertyKey ::= 'padding'|'size'|'fixedSize'|'contentPadding'
+
+include ::= 'include' OP_COLON string
+
+
+
+
+// Expression
+
+expr ::= conditionalExpr
+
+conditionalExpr ::= logicalOrExpr (OP_OPT expr OP_COLON conditionalExpr)?
+
+logicalOrExpr ::= logicalAndExpr logicalOrOp *
+
+private left logicalOrOp ::= OP_OR logicalAndExpr
+
+logicalAndExpr ::= equalExpr logicalAndOp *
+
+private left logicalAndOp ::= OP_AND equalExpr
+
+equalExpr ::= compareExpr (OP_EQEQ compareExpr)?
+
+compareExpr ::= addSubExpr (compareOp addSubExpr)?
+
+private compareOp ::= OP_MORE | OP_MORE_EQ | OP_LESS | OP_LESS_EQ | OP_EQEQ | OP_NEQ
+
+addSubExpr ::= mulDivExpr addSubOp*
+
+private left addSubOp ::= (OP_PLUS|OP_MINUS) mulDivExpr
+
+mulDivExpr ::= negateExpr mulDivOp *
+
+private left mulDivOp ::= (OP_MULTIPLY | OP_DIVIDE | OP_MOD) negateExpr
+
+negateExpr ::= (OP_NOT | OP_MINUS)? tokenExpr
+
+tokenExpr ::= innerExpr | switchExpr | alternativeExpr
+
+private innerExpr ::= LEFT_PAREN expr RIGHT_PAREN
+
+alternativeExpr ::= simpleExpr altOp *
+
+private left altOp ::= OP_ALT simpleExpr
+
+switchExpr ::= 'switch' LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN LEFT_BRACE switchCase * RIGHT_BRACE
+
+switchCase ::= 'case' ((LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN) | <<comma_separated_list expr>>) '=>' expr
+
+simpleExpr ::= constantExpr | referenceExpr
+
+constantExpr ::= string | number | color | CONST_TRUE | CONST_FALSE
+
+referenceExpr ::= shortEnum | functionCall | variableReference
+
+shortEnum ::= OP_DOT id
+
+variableReference ::= refPathList
+
+private refPathList ::= (id OP_DOT refPathList) | id
+
+functionCall ::= (id|'@') LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN
+
+meta comma_separated_list ::= <<param>> ( ',' <<param>> ) *

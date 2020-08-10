@@ -1,0 +1,45 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>VLayout UI markup language</name>
+  <version>1.0</version>
+  <vendor email="adarovsky@me.com" url="https://www.facebook.com/adarovsky">Alex Darovsky</vendor>
+
+  <description><![CDATA[
+      VLayout UI markup language. It allows interface description with the same rules to be applied to
+      multiple platforms
+  ]]></description>
+
+  <change-notes><![CDATA[
+      First release to support syntax highlighting and error reporting
+    ]]>
+  </change-notes>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+<!--  <depends>com.intellij.modules.java</depends>-->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileType name="VLayout File" implementationClass="org.intellij.sdk.language.VLayoutFileType"
+              fieldName="INSTANCE" language="VLayout" extensions="vlayout"/>
+    <lang.parserDefinition language="VLayout"
+                           implementationClass="org.intellij.sdk.language.VLayoutParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="VLayout"
+                                   implementationClass="org.intellij.sdk.language.VLayoutSyntaxHighlighterFactory"/>
+    <completion.contributor language="VLayout"
+                            implementationClass="org.intellij.sdk.language.VLayoutCompletionContributor"/>
+
+    <annotator language="VLayout" implementationClass="org.intellij.sdk.language.VLayoutAnnotator"/>
+
+    <lang.foldingBuilder language="VLayout"
+                         implementationClass="org.intellij.sdk.language.VLayoutFoldingBuilder"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
