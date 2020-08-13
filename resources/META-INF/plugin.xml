@@ -51,6 +51,9 @@
     <lang.findUsagesProvider language="VLayout"
                              implementationClass="org.intellij.sdk.language.VLayoutFindUsagesProvider"/>
 
+    <lang.refactoringSupport language="VLayout"
+                             implementationClass="org.intellij.sdk.language.VLayoutRefactoringSupportProvider"/>
+
   </extensions>
 
   <actions>

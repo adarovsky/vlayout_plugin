@@ -13,8 +13,4 @@ public interface VLayoutBindingDeclaration extends VLayoutNamedElement {
   @NotNull
   PsiElement getId();
 
-  String getKey();
-
-  String getValue();
-
 }

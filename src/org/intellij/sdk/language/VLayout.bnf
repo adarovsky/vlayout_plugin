@@ -62,7 +62,6 @@ bindingsSection ::= 'bindings' LEFT_BRACE bindingDeclaration * RIGHT_BRACE {
 bindingDeclaration ::= id OP_COLON viewType {
     pin=1
     recoverWhile=pairRecover
-    methods=[getKey getValue]
     mixin="org.intellij.sdk.language.psi.impl.VLayoutBindingDeclarationMixin"
     implements="org.intellij.sdk.language.psi.VLayoutNamedElement"
 }

@@ -1,8 +1,11 @@
 package org.intellij.sdk.language;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.util.IncorrectOperationException;
 import org.intellij.sdk.language.psi.VLayoutBindingDeclaration;
+import org.intellij.sdk.language.psi.VLayoutElementFactory;
 import org.intellij.sdk.language.psi.VLayoutViewDeclaration;
 import org.intellij.sdk.language.psi.impl.VLayoutPsiImplUtil;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +17,8 @@ public class VLayoutBindingReference extends PsiReferenceBase<VLayoutViewDeclara
 
     private final String key;
 
-    public VLayoutBindingReference(@NotNull VLayoutViewDeclaration element) {
-        super(element, element.getFirstChild().getTextRangeInParent());
+    public VLayoutBindingReference(@NotNull VLayoutViewDeclaration element, @NotNull TextRange range) {
+        super(element, range);
         key = element.getFirstChild().getText();
     }
 
@@ -45,5 +48,10 @@ public class VLayoutBindingReference extends PsiReferenceBase<VLayoutViewDeclara
                                 .create(binding).withIcon(VLayoutIcons.FILE)
                                 .withTypeText(binding.getContainingFile().getName()))
                 .toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+        return VLayoutPsiImplUtil.setName(getElement(), newElementName);
     }
 }

@@ -18,7 +18,7 @@ public class VLayoutReferenceContributor extends PsiReferenceContributor {
                     public PsiReference[] getReferencesByElement(@NotNull PsiElement element,
                                                                  @NotNull ProcessingContext context) {
                         VLayoutViewDeclaration declaration = (VLayoutViewDeclaration) element;
-                        return new PsiReference[]{new VLayoutBindingReference(declaration)};
+                        return new PsiReference[]{new VLayoutBindingReference(declaration, declaration.getId().getTextRangeInParent())};
                     }
                 });
     }

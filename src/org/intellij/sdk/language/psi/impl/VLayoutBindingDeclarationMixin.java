@@ -38,9 +38,7 @@ public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement impleme
 
     @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        VLayoutBindingDeclaration b = VLayoutElementFactory.createBinding(getProject(), s, getLastChild().getText());
-
-        return b.getFirstChild();
+        return VLayoutPsiImplUtil.setName(this, s);
     }
 
     @Override

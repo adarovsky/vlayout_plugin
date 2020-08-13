@@ -37,14 +37,4 @@ public class VLayoutBindingDeclarationImpl extends VLayoutBindingDeclarationMixi
     return findNotNullChildByType(ID);
   }
 
-  @Override
-  public String getKey() {
-    return VLayoutPsiImplUtil.getKey(this);
-  }
-
-  @Override
-  public String getValue() {
-    return VLayoutPsiImplUtil.getValue(this);
-  }
-
 }

@@ -79,8 +79,12 @@ public class VLayoutViewDeclarationMixin extends ASTWrapperPsiElement implements
         if (Arrays.asList(PREDEFINED_VIEW_TYPES).contains(text)) {
             return super.getReference();
         }
-        return new VLayoutBindingReference((VLayoutViewDeclaration) this);
+        TextRange range = getFirstChild().getTextRangeInParent();
+//        TextRange debug = new TextRange(range.getStartOffset()+1, range.getEndOffset()-1);
+        return new VLayoutBindingReference((VLayoutViewDeclaration) this, range);
     }
+
+
 
     public static final String[] PREDEFINED_VIEW_TYPES = {
             "layout",

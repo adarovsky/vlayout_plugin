@@ -14,36 +14,25 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.intellij.sdk.language.VLayoutFileType;
 import org.intellij.sdk.language.VLayoutStructureViewElement;
 import org.intellij.sdk.language.psi.VLayoutBindingDeclaration;
+import org.intellij.sdk.language.psi.VLayoutElementFactory;
 import org.intellij.sdk.language.psi.VLayoutFile;
 import org.intellij.sdk.language.psi.VLayoutTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 
 public class VLayoutPsiImplUtil {
-    public static String getKey(VLayoutBindingDeclaration element) {
-        ASTNode keyNode = element.getNode().findChildByType(VLayoutTypes.ID);
-        if (keyNode != null) {
-            return keyNode.getText();
-        } else {
-            return null;
-        }
-    }
 
-    public static String getValue(VLayoutBindingDeclaration element) {
-        ASTNode valueNode = element.getNode().findChildByType(VLayoutTypes.VIEW_TYPE);
-        if (valueNode != null) {
-            return valueNode.getText();
-        } else {
-            return null;
-        }
+    public static PsiElement setName(PsiElement element, String newElementName) {
+        PsiElement b = VLayoutElementFactory.createName(element.getProject(), newElementName);
+        element.getNode().replaceChild(element.getFirstChild().getNode(), b.getNode());
+        return b;
     }
-
     public static ItemPresentation getPresentation(final NavigatablePsiElement element) {
         return new ItemPresentation() {
             @Nullable
@@ -111,7 +100,7 @@ public class VLayoutPsiImplUtil {
         for (VLayoutFile file : getReferencingFiles(element)) {
             Collection<VLayoutBindingDeclaration> d = PsiTreeUtil.findChildrenOfType(file, VLayoutBindingDeclaration.class);
             for (VLayoutBindingDeclaration i : d) {
-                if (i.getKey().equals(name)) {
+                if (Objects.equals(i.getName(), name)) {
                     bindings.add(i);
                 }
             }
