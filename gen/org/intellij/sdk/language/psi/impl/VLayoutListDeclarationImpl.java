@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.intellij.sdk.language.psi.VLayoutTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.intellij.sdk.language.psi.*;
 
-public class VLayoutListDeclarationImpl extends ASTWrapperPsiElement implements VLayoutListDeclaration {
+public class VLayoutListDeclarationImpl extends VLayoutListDeclarationMixin implements VLayoutListDeclaration {
 
   public VLayoutListDeclarationImpl(@NotNull ASTNode node) {
     super(node);
@@ -30,12 +29,6 @@ public class VLayoutListDeclarationImpl extends ASTWrapperPsiElement implements 
   @NotNull
   public List<VLayoutCommaSeparatedList> getCommaSeparatedListList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutCommaSeparatedList.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
   }
 
 }

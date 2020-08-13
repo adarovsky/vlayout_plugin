@@ -32,10 +32,4 @@ public class VLayoutComplexPropertyDeclarationImpl extends ASTWrapperPsiElement 
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutPropertyDeclaration.class);
   }
 
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
-  }
-
 }

@@ -3,15 +3,15 @@ package org.intellij.sdk.language.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
-import org.intellij.sdk.language.psi.VLayoutBindingDeclaration;
-import org.intellij.sdk.language.psi.VLayoutElementFactory;
-import org.intellij.sdk.language.psi.VLayoutNamedElement;
-import org.intellij.sdk.language.psi.VLayoutSelfAnnotating;
+import org.intellij.sdk.language.VLayoutSyntaxHighlighter;
+import org.intellij.sdk.language.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
-public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement implements VLayoutNamedElement, VLayoutSelfAnnotating {
+public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement implements VLayoutNamedElement, VLayoutSelfAnnotating, NavigatablePsiElement {
     public VLayoutBindingDeclarationMixin(@NotNull ASTNode node) {
         super(node);
     }
@@ -32,6 +32,11 @@ public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement impleme
     }
 
     @Override
+    public String getName() {
+        return getFirstChild().getText();
+    }
+
+    @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
         VLayoutBindingDeclaration b = VLayoutElementFactory.createBinding(getProject(), s, getLastChild().getText());
 
@@ -40,16 +45,33 @@ public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement impleme
 
     @Override
     public void annotate(@NotNull AnnotationHolder holder) {
-        System.out.println("this: " + this.toString());
-        System.out.println("children: " + Arrays.toString(getChildren()));
-
         String text = getLastChild().getText();
-        TextRange range = getLastChild().getTextRange();
+        TextRange nameRange = getFirstChild().getTextRange();
+        TextRange typeRange = getLastChild().getTextRange();
+
+        holder.newAnnotation(INFORMATION, "").range(nameRange).textAttributes(VLayoutSyntaxHighlighter.BINDING).create();
+
         if (!text.equals("listButton") && !text.equals("button") && !text.equals("view") && !text.equals("listView")) {
-            holder.newAnnotation(ERROR, "View type is not supported").range(range).create();
+            holder.newAnnotation(ERROR, "View type is not supported").range(typeRange).create();
         }
         else {
-            holder.newAnnotation(INFORMATION, "").range(range).textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create();
+            holder.newAnnotation(INFORMATION, "").range(typeRange).textAttributes(VLayoutSyntaxHighlighter.KEYWORD).create();
         }
+    }
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return VLayoutPsiImplUtil.getPresentation(this);
+    }
+
+
+    @Override
+    public String getType() {
+        return "view binding";
+    }
+
+    @Override
+    public String getDescriptiveName() {
+        return getName();
     }
 }

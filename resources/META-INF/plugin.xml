@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>com.your.company.unique.plugin.id</id>
+  <id>com.adarovsky.VLayout</id>
   <name>VLayout UI markup language</name>
   <version>1.0</version>
   <vendor email="adarovsky@me.com" url="https://www.facebook.com/adarovsky">Alex Darovsky</vendor>
@@ -36,6 +36,21 @@
 
     <lang.foldingBuilder language="VLayout"
                          implementationClass="org.intellij.sdk.language.VLayoutFoldingBuilder"/>
+
+    <lang.commenter language="VLayout" implementationClass="org.intellij.sdk.language.VLayoutCommenter"/>
+
+    <gotoSymbolContributor
+            implementation="org.intellij.sdk.language.VLayoutChooseByNameContributor"/>
+
+    <lang.psiStructureViewFactory language="VLayout"
+                                  implementationClass="org.intellij.sdk.language.VLayoutStructureViewFactory"/>
+    <colorSettingsPage implementation="org.intellij.sdk.language.VLayoutColorSettingsPage"/>
+
+    <psi.referenceContributor implementation="org.intellij.sdk.language.VLayoutReferenceContributor"/>
+
+    <lang.findUsagesProvider language="VLayout"
+                             implementationClass="org.intellij.sdk.language.VLayoutFindUsagesProvider"/>
+
   </extensions>
 
   <actions>

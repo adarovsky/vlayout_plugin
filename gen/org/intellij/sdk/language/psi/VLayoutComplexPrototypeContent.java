@@ -5,6 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VLayoutSimpleType extends PsiElement {
+public interface VLayoutComplexPrototypeContent extends PsiElement {
+
+  @NotNull
+  List<VLayoutPrototypeContent> getPrototypeContentList();
 
 }

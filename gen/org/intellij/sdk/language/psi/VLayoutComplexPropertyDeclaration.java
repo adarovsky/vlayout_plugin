@@ -10,7 +10,4 @@ public interface VLayoutComplexPropertyDeclaration extends PsiElement {
   @NotNull
   List<VLayoutPropertyDeclaration> getPropertyDeclarationList();
 
-  @NotNull
-  PsiElement getId();
-
 }

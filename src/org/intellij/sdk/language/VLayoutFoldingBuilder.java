@@ -22,6 +22,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class VLayoutFoldingBuilder extends FoldingBuilderEx implements DumbAware {
+    @Override
+    public boolean isCollapsedByDefault(@NotNull FoldingDescriptor foldingDescriptor) {
+        return foldingDescriptor.getElement().getElementType().equals(VLayoutTypes.BINDINGS_SECTION);
+    }
+
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
@@ -29,7 +34,6 @@ public class VLayoutFoldingBuilder extends FoldingBuilderEx implements DumbAware
 //        FoldingGroup group = FoldingGroup.newGroup("{");
         // Initialize the list of folding regions
         List< FoldingDescriptor > descriptors = new ArrayList<>();
-        System.out.println("folding" + root.toString());
 
         // Get a collection of the literal expressions in the document below root
         Collection< LeafPsiElement > literalExpressions =
@@ -56,12 +60,6 @@ public class VLayoutFoldingBuilder extends FoldingBuilderEx implements DumbAware
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 
-    /**
-     * Gets the VLayout Language 'value' string corresponding to the 'key'
-     * @param node  Node corresponding to PsiLiteralExpression containing a string in the format
-     *              SIMPLE_PREFIX_STR + SIMPLE_SEPARATOR_STR + Key, where Key is
-     *              defined by the VLayout language file.
-     */
     @Nullable
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {

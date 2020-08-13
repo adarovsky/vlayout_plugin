@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.intellij.sdk.language.psi.VLayoutTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.intellij.sdk.language.psi.*;
 
-public class VLayoutTypeDeclarationImpl extends ASTWrapperPsiElement implements VLayoutTypeDeclaration {
+public class VLayoutTypeDeclarationImpl extends VLayoutTypeDeclarationMixin implements VLayoutTypeDeclaration {
 
   public VLayoutTypeDeclarationImpl(@NotNull ASTNode node) {
     super(node);
@@ -36,6 +35,12 @@ public class VLayoutTypeDeclarationImpl extends ASTWrapperPsiElement implements 
   @Nullable
   public VLayoutListDeclaration getListDeclaration() {
     return findChildByClass(VLayoutListDeclaration.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getId() {
+    return findNotNullChildByType(ID);
   }
 
 }

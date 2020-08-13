@@ -32,10 +32,4 @@ public class VLayoutComplexInputImpl extends ASTWrapperPsiElement implements VLa
     return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutInputDeclaration.class);
   }
 
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
-  }
-
 }

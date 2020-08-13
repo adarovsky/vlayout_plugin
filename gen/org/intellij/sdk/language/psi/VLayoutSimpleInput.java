@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface VLayoutSimpleInput extends PsiElement {
 
+  @NotNull
+  PsiElement getId();
+
 }

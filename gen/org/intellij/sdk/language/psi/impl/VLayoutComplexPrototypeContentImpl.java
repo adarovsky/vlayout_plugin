@@ -11,14 +11,14 @@ import static org.intellij.sdk.language.psi.VLayoutTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.intellij.sdk.language.psi.*;
 
-public class VLayoutComplexTypeImpl extends ASTWrapperPsiElement implements VLayoutComplexType {
+public class VLayoutComplexPrototypeContentImpl extends ASTWrapperPsiElement implements VLayoutComplexPrototypeContent {
 
-  public VLayoutComplexTypeImpl(@NotNull ASTNode node) {
+  public VLayoutComplexPrototypeContentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull VLayoutVisitor visitor) {
-    visitor.visitComplexType(this);
+    visitor.visitComplexPrototypeContent(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -28,20 +28,8 @@ public class VLayoutComplexTypeImpl extends ASTWrapperPsiElement implements VLay
 
   @Override
   @NotNull
-  public List<VLayoutComplexType> getComplexTypeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutComplexType.class);
-  }
-
-  @Override
-  @NotNull
-  public List<VLayoutSimpleType> getSimpleTypeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutSimpleType.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  public List<VLayoutPrototypeContent> getPrototypeContentList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, VLayoutPrototypeContent.class);
   }
 
 }

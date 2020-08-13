@@ -266,87 +266,78 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id LEFT_BRACE inputDeclaration * RIGHT_BRACE
+  // LEFT_BRACE inputDeclaration * RIGHT_BRACE
   public static boolean complexInput(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "complexInput")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    if (!nextTokenIs(b, LEFT_BRACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, LEFT_BRACE);
-    r = r && complexInput_2(b, l + 1);
+    r = consumeToken(b, LEFT_BRACE);
+    r = r && complexInput_1(b, l + 1);
     r = r && consumeToken(b, RIGHT_BRACE);
     exit_section_(b, m, COMPLEX_INPUT, r);
     return r;
   }
 
   // inputDeclaration *
-  private static boolean complexInput_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "complexInput_2")) return false;
+  private static boolean complexInput_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "complexInput_1")) return false;
     while (true) {
       int c = current_position_(b);
       if (!inputDeclaration(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "complexInput_2", c)) break;
+      if (!empty_element_parsed_guard_(b, "complexInput_1", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // id LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+  // LEFT_BRACE propertyDeclaration * RIGHT_BRACE
   public static boolean complexPropertyDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "complexPropertyDeclaration")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    if (!nextTokenIs(b, LEFT_BRACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, LEFT_BRACE);
-    r = r && complexPropertyDeclaration_2(b, l + 1);
+    r = consumeToken(b, LEFT_BRACE);
+    r = r && complexPropertyDeclaration_1(b, l + 1);
     r = r && consumeToken(b, RIGHT_BRACE);
     exit_section_(b, m, COMPLEX_PROPERTY_DECLARATION, r);
     return r;
   }
 
   // propertyDeclaration *
-  private static boolean complexPropertyDeclaration_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "complexPropertyDeclaration_2")) return false;
+  private static boolean complexPropertyDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "complexPropertyDeclaration_1")) return false;
     while (true) {
       int c = current_position_(b);
       if (!propertyDeclaration(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "complexPropertyDeclaration_2", c)) break;
+      if (!empty_element_parsed_guard_(b, "complexPropertyDeclaration_1", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // id LEFT_BRACE (complexType|simpleType) * RIGHT_BRACE
-  public static boolean complexType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "complexType")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+  // LEFT_BRACE prototypeContent * RIGHT_BRACE
+  public static boolean complexPrototypeContent(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "complexPrototypeContent")) return false;
+    if (!nextTokenIs(b, LEFT_BRACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, LEFT_BRACE);
-    r = r && complexType_2(b, l + 1);
+    r = consumeToken(b, LEFT_BRACE);
+    r = r && complexPrototypeContent_1(b, l + 1);
     r = r && consumeToken(b, RIGHT_BRACE);
-    exit_section_(b, m, COMPLEX_TYPE, r);
+    exit_section_(b, m, COMPLEX_PROTOTYPE_CONTENT, r);
     return r;
   }
 
-  // (complexType|simpleType) *
-  private static boolean complexType_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "complexType_2")) return false;
+  // prototypeContent *
+  private static boolean complexPrototypeContent_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "complexPrototypeContent_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!complexType_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "complexType_2", c)) break;
+      if (!prototypeContent(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "complexPrototypeContent_1", c)) break;
     }
     return true;
-  }
-
-  // complexType|simpleType
-  private static boolean complexType_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "complexType_2_0")) return false;
-    boolean r;
-    r = complexType(b, l + 1);
-    if (!r) r = simpleType(b, l + 1);
-    return r;
   }
 
   /* ********************************************************** */
@@ -422,36 +413,46 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id OP_COLON 'enum' LEFT_PAREN enumItems * RIGHT_PAREN
+  // 'enum' LEFT_PAREN enumItems * RIGHT_PAREN
   public static boolean enumDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "enumDeclaration")) return false;
-    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, OP_COLON);
-    r = r && consumeToken(b, "enum");
+    Marker m = enter_section_(b, l, _NONE_, ENUM_DECLARATION, "<enum declaration>");
+    r = consumeToken(b, "enum");
     r = r && consumeToken(b, LEFT_PAREN);
-    r = r && enumDeclaration_4(b, l + 1);
+    r = r && enumDeclaration_2(b, l + 1);
     r = r && consumeToken(b, RIGHT_PAREN);
-    exit_section_(b, m, ENUM_DECLARATION, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   // enumItems *
-  private static boolean enumDeclaration_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "enumDeclaration_4")) return false;
+  private static boolean enumDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "enumDeclaration_2")) return false;
     while (true) {
       int c = current_position_(b);
       if (!enumItems(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "enumDeclaration_4", c)) break;
+      if (!empty_element_parsed_guard_(b, "enumDeclaration_2", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // <<comma_separated_list id>>
+  // id
+  public static boolean enumElement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "enumElement")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    exit_section_(b, m, ENUM_ELEMENT, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // <<comma_separated_list enumElement>>
   static boolean enumItems(PsiBuilder b, int l) {
-    return comma_separated_list(b, l + 1, ID_parser_);
+    return comma_separated_list(b, l + 1, enumElement_parser_);
   }
 
   /* ********************************************************** */
@@ -496,9 +497,10 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (id|'@') LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN
+  // (id|LOCALIZED) LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN
   public static boolean functionCall(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "functionCall")) return false;
+    if (!nextTokenIs(b, "<function call>", ID, LOCALIZED)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, FUNCTION_CALL, "<function call>");
     r = functionCall_0(b, l + 1);
@@ -509,12 +511,12 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // id|'@'
+  // id|LOCALIZED
   private static boolean functionCall_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "functionCall_0")) return false;
     boolean r;
     r = consumeToken(b, ID);
-    if (!r) r = consumeToken(b, "@");
+    if (!r) r = consumeToken(b, LOCALIZED);
     return r;
   }
 
@@ -598,15 +600,25 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // simpleInput | complexInput
+  // id (simpleInput | complexInput)
   public static boolean inputDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inputDeclaration")) return false;
     if (!nextTokenIs(b, ID)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, INPUT_DECLARATION, null);
+    r = consumeToken(b, ID);
+    p = r; // pin = 1
+    r = r && inputDeclaration_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // simpleInput | complexInput
+  private static boolean inputDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "inputDeclaration_1")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = simpleInput(b, l + 1);
     if (!r) r = complexInput(b, l + 1);
-    exit_section_(b, m, INPUT_DECLARATION, r);
     return r;
   }
 
@@ -670,36 +682,34 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id OP_COLON 'list' LEFT_PAREN listPrototype * RIGHT_PAREN
+  // 'list' LEFT_PAREN listPrototype * RIGHT_PAREN
   public static boolean listDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "listDeclaration")) return false;
-    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, OP_COLON);
-    r = r && consumeToken(b, "list");
+    Marker m = enter_section_(b, l, _NONE_, LIST_DECLARATION, "<list declaration>");
+    r = consumeToken(b, "list");
     r = r && consumeToken(b, LEFT_PAREN);
-    r = r && listDeclaration_4(b, l + 1);
+    r = r && listDeclaration_2(b, l + 1);
     r = r && consumeToken(b, RIGHT_PAREN);
-    exit_section_(b, m, LIST_DECLARATION, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   // listPrototype *
-  private static boolean listDeclaration_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "listDeclaration_4")) return false;
+  private static boolean listDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "listDeclaration_2")) return false;
     while (true) {
       int c = current_position_(b);
       if (!listPrototype(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "listDeclaration_4", c)) break;
+      if (!empty_element_parsed_guard_(b, "listDeclaration_2", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // <<comma_separated_list complexType>>
+  // <<comma_separated_list prototypeDescription>>
   static boolean listPrototype(PsiBuilder b, int l) {
-    return comma_separated_list(b, l + 1, complexType_parser_);
+    return comma_separated_list(b, l + 1, prototypeDescription_parser_);
   }
 
   /* ********************************************************** */
@@ -879,20 +889,29 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // simplePropertyDeclaration | complexPropertyDeclaration
+  // id (simplePropertyDeclaration | complexPropertyDeclaration)
   public static boolean propertyDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "propertyDeclaration")) return false;
     if (!nextTokenIs(b, ID)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = simplePropertyDeclaration(b, l + 1);
-    if (!r) r = complexPropertyDeclaration(b, l + 1);
+    r = consumeToken(b, ID);
+    r = r && propertyDeclaration_1(b, l + 1);
     exit_section_(b, m, PROPERTY_DECLARATION, r);
     return r;
   }
 
+  // simplePropertyDeclaration | complexPropertyDeclaration
+  private static boolean propertyDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "propertyDeclaration_1")) return false;
+    boolean r;
+    r = simplePropertyDeclaration(b, l + 1);
+    if (!r) r = complexPropertyDeclaration(b, l + 1);
+    return r;
+  }
+
   /* ********************************************************** */
-  // 'padding'|'size'|'fixedSize'|'contentPadding'
+  // 'padding'|'size'|'fixedSize'|'contentPadding'|'center'
   public static boolean propertyKey(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "propertyKey")) return false;
     boolean r;
@@ -901,7 +920,43 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, "size");
     if (!r) r = consumeToken(b, "fixedSize");
     if (!r) r = consumeToken(b, "contentPadding");
+    if (!r) r = consumeToken(b, "center");
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // id (complexPrototypeContent|simplePrototypeContent)
+  public static boolean prototypeContent(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "prototypeContent")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    r = r && prototypeContent_1(b, l + 1);
+    exit_section_(b, m, PROTOTYPE_CONTENT, r);
+    return r;
+  }
+
+  // complexPrototypeContent|simplePrototypeContent
+  private static boolean prototypeContent_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "prototypeContent_1")) return false;
+    boolean r;
+    r = complexPrototypeContent(b, l + 1);
+    if (!r) r = simplePrototypeContent(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // id complexPrototypeContent
+  public static boolean prototypeDescription(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "prototypeDescription")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    r = r && complexPrototypeContent(b, l + 1);
+    exit_section_(b, m, PROTOTYPE_DESCRIPTION, r);
     return r;
   }
 
@@ -967,39 +1022,39 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id OP_COLON id
+  // OP_COLON id
   public static boolean simpleInput(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "simpleInput")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    if (!nextTokenIs(b, OP_COLON)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, OP_COLON, ID);
+    r = consumeTokens(b, 0, OP_COLON, ID);
     exit_section_(b, m, SIMPLE_INPUT, r);
     return r;
   }
 
   /* ********************************************************** */
-  // id OP_COLON expr
+  // OP_COLON expr
   public static boolean simplePropertyDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "simplePropertyDeclaration")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    if (!nextTokenIs(b, OP_COLON)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, OP_COLON);
+    r = consumeToken(b, OP_COLON);
     r = r && expr(b, l + 1);
     exit_section_(b, m, SIMPLE_PROPERTY_DECLARATION, r);
     return r;
   }
 
   /* ********************************************************** */
-  // id OP_COLON id
-  public static boolean simpleType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "simpleType")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+  // OP_COLON id
+  public static boolean simplePrototypeContent(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "simplePrototypeContent")) return false;
+    if (!nextTokenIs(b, OP_COLON)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, OP_COLON, ID);
-    exit_section_(b, m, SIMPLE_TYPE, r);
+    r = consumeTokens(b, 0, OP_COLON, ID);
+    exit_section_(b, m, SIMPLE_PROTOTYPE_CONTENT, r);
     return r;
   }
 
@@ -1095,30 +1150,38 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // bindingsSection | typesSection | inputsSection | propertiesSection | functionsSection | layoutSection
-  public static boolean topDeclaration(PsiBuilder b, int l) {
+  static boolean topDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "topDeclaration")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TOP_DECLARATION, "<top declaration>");
     r = bindingsSection(b, l + 1);
     if (!r) r = typesSection(b, l + 1);
     if (!r) r = inputsSection(b, l + 1);
     if (!r) r = propertiesSection(b, l + 1);
     if (!r) r = functionsSection(b, l + 1);
     if (!r) r = layoutSection(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // enumDeclaration | listDeclaration
+  // id OP_COLON (enumDeclaration | listDeclaration)
   public static boolean typeDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeDeclaration")) return false;
     if (!nextTokenIs(b, ID)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, TYPE_DECLARATION, null);
+    r = consumeTokens(b, 1, ID, OP_COLON);
+    p = r; // pin = 1
+    r = r && typeDeclaration_2(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // enumDeclaration | listDeclaration
+  private static boolean typeDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeDeclaration_2")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = enumDeclaration(b, l + 1);
     if (!r) r = listDeclaration(b, l + 1);
-    exit_section_(b, m, TYPE_DECLARATION, r);
     return r;
   }
 
@@ -1218,14 +1281,9 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser ID_parser_ = new Parser() {
+  static final Parser enumElement_parser_ = new Parser() {
     public boolean parse(PsiBuilder b, int l) {
-      return consumeToken(b, ID);
-    }
-  };
-  static final Parser complexType_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return complexType(b, l + 1);
+      return enumElement(b, l + 1);
     }
   };
   static final Parser expr_parser_ = new Parser() {
@@ -1241,6 +1299,11 @@ public class VLayoutParser implements PsiParser, LightPsiParser {
   static final Parser pairRecover_parser_ = new Parser() {
     public boolean parse(PsiBuilder b, int l) {
       return pairRecover(b, l + 1);
+    }
+  };
+  static final Parser prototypeDescription_parser_ = new Parser() {
+    public boolean parse(PsiBuilder b, int l) {
+      return prototypeDescription(b, l + 1);
     }
   };
 }

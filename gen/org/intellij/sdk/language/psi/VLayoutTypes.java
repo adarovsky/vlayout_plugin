@@ -16,11 +16,12 @@ public interface VLayoutTypes {
   IElementType COMPARE_EXPR = new VLayoutElementType("COMPARE_EXPR");
   IElementType COMPLEX_INPUT = new VLayoutElementType("COMPLEX_INPUT");
   IElementType COMPLEX_PROPERTY_DECLARATION = new VLayoutElementType("COMPLEX_PROPERTY_DECLARATION");
-  IElementType COMPLEX_TYPE = new VLayoutElementType("COMPLEX_TYPE");
+  IElementType COMPLEX_PROTOTYPE_CONTENT = new VLayoutElementType("COMPLEX_PROTOTYPE_CONTENT");
   IElementType COMPLEX_VIEW_PROPERTY = new VLayoutElementType("COMPLEX_VIEW_PROPERTY");
   IElementType CONDITIONAL_EXPR = new VLayoutElementType("CONDITIONAL_EXPR");
   IElementType CONSTANT_EXPR = new VLayoutElementType("CONSTANT_EXPR");
   IElementType ENUM_DECLARATION = new VLayoutElementType("ENUM_DECLARATION");
+  IElementType ENUM_ELEMENT = new VLayoutElementType("ENUM_ELEMENT");
   IElementType EQUAL_EXPR = new VLayoutElementType("EQUAL_EXPR");
   IElementType EXPR = new VLayoutElementType("EXPR");
   IElementType FUNCTIONS_SECTION = new VLayoutElementType("FUNCTIONS_SECTION");
@@ -39,17 +40,18 @@ public interface VLayoutTypes {
   IElementType PROPERTIES_SECTION = new VLayoutElementType("PROPERTIES_SECTION");
   IElementType PROPERTY_DECLARATION = new VLayoutElementType("PROPERTY_DECLARATION");
   IElementType PROPERTY_KEY = new VLayoutElementType("PROPERTY_KEY");
+  IElementType PROTOTYPE_CONTENT = new VLayoutElementType("PROTOTYPE_CONTENT");
+  IElementType PROTOTYPE_DESCRIPTION = new VLayoutElementType("PROTOTYPE_DESCRIPTION");
   IElementType REFERENCE_EXPR = new VLayoutElementType("REFERENCE_EXPR");
   IElementType SHORT_ENUM = new VLayoutElementType("SHORT_ENUM");
   IElementType SIMPLE_EXPR = new VLayoutElementType("SIMPLE_EXPR");
   IElementType SIMPLE_INPUT = new VLayoutElementType("SIMPLE_INPUT");
   IElementType SIMPLE_PROPERTY_DECLARATION = new VLayoutElementType("SIMPLE_PROPERTY_DECLARATION");
-  IElementType SIMPLE_TYPE = new VLayoutElementType("SIMPLE_TYPE");
+  IElementType SIMPLE_PROTOTYPE_CONTENT = new VLayoutElementType("SIMPLE_PROTOTYPE_CONTENT");
   IElementType SIMPLE_VIEW_PROPERTY = new VLayoutElementType("SIMPLE_VIEW_PROPERTY");
   IElementType SWITCH_CASE = new VLayoutElementType("SWITCH_CASE");
   IElementType SWITCH_EXPR = new VLayoutElementType("SWITCH_EXPR");
   IElementType TOKEN_EXPR = new VLayoutElementType("TOKEN_EXPR");
-  IElementType TOP_DECLARATION = new VLayoutElementType("TOP_DECLARATION");
   IElementType TYPES_SECTION = new VLayoutElementType("TYPES_SECTION");
   IElementType TYPE_DECLARATION = new VLayoutElementType("TYPE_DECLARATION");
   IElementType VARIABLE_REFERENCE = new VLayoutElementType("VARIABLE_REFERENCE");
@@ -64,6 +66,7 @@ public interface VLayoutTypes {
   IElementType LEFT_BRACE = new VLayoutTokenType("{");
   IElementType LEFT_PAREN = new VLayoutTokenType("(");
   IElementType LINE_COMMENT = new VLayoutTokenType("line_comment");
+  IElementType LOCALIZED = new VLayoutTokenType("@");
   IElementType NUMBER = new VLayoutTokenType("number");
   IElementType OP_ALT = new VLayoutTokenType("|");
   IElementType OP_AND = new VLayoutTokenType("&&");
@@ -116,8 +119,8 @@ public interface VLayoutTypes {
       else if (type == COMPLEX_PROPERTY_DECLARATION) {
         return new VLayoutComplexPropertyDeclarationImpl(node);
       }
-      else if (type == COMPLEX_TYPE) {
-        return new VLayoutComplexTypeImpl(node);
+      else if (type == COMPLEX_PROTOTYPE_CONTENT) {
+        return new VLayoutComplexPrototypeContentImpl(node);
       }
       else if (type == COMPLEX_VIEW_PROPERTY) {
         return new VLayoutComplexViewPropertyImpl(node);
@@ -130,6 +133,9 @@ public interface VLayoutTypes {
       }
       else if (type == ENUM_DECLARATION) {
         return new VLayoutEnumDeclarationImpl(node);
+      }
+      else if (type == ENUM_ELEMENT) {
+        return new VLayoutEnumElementImpl(node);
       }
       else if (type == EQUAL_EXPR) {
         return new VLayoutEqualExprImpl(node);
@@ -185,6 +191,12 @@ public interface VLayoutTypes {
       else if (type == PROPERTY_KEY) {
         return new VLayoutPropertyKeyImpl(node);
       }
+      else if (type == PROTOTYPE_CONTENT) {
+        return new VLayoutPrototypeContentImpl(node);
+      }
+      else if (type == PROTOTYPE_DESCRIPTION) {
+        return new VLayoutPrototypeDescriptionImpl(node);
+      }
       else if (type == REFERENCE_EXPR) {
         return new VLayoutReferenceExprImpl(node);
       }
@@ -200,8 +212,8 @@ public interface VLayoutTypes {
       else if (type == SIMPLE_PROPERTY_DECLARATION) {
         return new VLayoutSimplePropertyDeclarationImpl(node);
       }
-      else if (type == SIMPLE_TYPE) {
-        return new VLayoutSimpleTypeImpl(node);
+      else if (type == SIMPLE_PROTOTYPE_CONTENT) {
+        return new VLayoutSimplePrototypeContentImpl(node);
       }
       else if (type == SIMPLE_VIEW_PROPERTY) {
         return new VLayoutSimpleViewPropertyImpl(node);
@@ -214,9 +226,6 @@ public interface VLayoutTypes {
       }
       else if (type == TOKEN_EXPR) {
         return new VLayoutTokenExprImpl(node);
-      }
-      else if (type == TOP_DECLARATION) {
-        return new VLayoutTopDeclarationImpl(node);
       }
       else if (type == TYPES_SECTION) {
         return new VLayoutTypesSectionImpl(node);

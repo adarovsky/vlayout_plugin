@@ -13,4 +13,7 @@ public interface VLayoutInputDeclaration extends PsiElement {
   @Nullable
   VLayoutSimpleInput getSimpleInput();
 
+  @NotNull
+  PsiElement getId();
+
 }

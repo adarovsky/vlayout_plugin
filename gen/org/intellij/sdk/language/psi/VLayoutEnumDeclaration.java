@@ -10,7 +10,4 @@ public interface VLayoutEnumDeclaration extends PsiElement {
   @NotNull
   List<VLayoutCommaSeparatedList> getCommaSeparatedListList();
 
-  @NotNull
-  PsiElement getId();
-
 }

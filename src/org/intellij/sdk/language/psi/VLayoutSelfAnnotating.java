@@ -6,4 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface VLayoutSelfAnnotating {
     public void annotate(@NotNull AnnotationHolder holder);
+    public String getType();
+    public String getDescriptiveName();
 }

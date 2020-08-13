@@ -13,4 +13,7 @@ public interface VLayoutPropertyDeclaration extends PsiElement {
   @Nullable
   VLayoutSimplePropertyDeclaration getSimplePropertyDeclaration();
 
+  @NotNull
+  PsiElement getId();
+
 }

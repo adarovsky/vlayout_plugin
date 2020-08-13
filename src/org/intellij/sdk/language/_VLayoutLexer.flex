@@ -26,8 +26,8 @@ EOL=\R
 WHITE_SPACE=\s+
 
 SPACE=[ \t\n\x0B\f\r]+
-ID=[a-zA-Z_0-9]+
-STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\")
+ID=[\p{Alpha}_][a-zA-Z_0-9]*
+STRING=(\"([^\"\\]|\\\"|\\'|\\)*\")
 NUMBER=[0-9]+(\.[0-9]*)?
 COLOR=#([\dabcdefABCDEF]){6}
 LINE_COMMENT="//".*
@@ -62,6 +62,7 @@ LINE_COMMENT="//".*
   ")"                 { return RIGHT_PAREN; }
   "true"              { return CONST_TRUE; }
   "false"             { return CONST_FALSE; }
+  "@"                 { return LOCALIZED; }
 
   {SPACE}             { return SPACE; }
   {ID}                { return ID; }

@@ -10,7 +10,4 @@ public interface VLayoutComplexInput extends PsiElement {
   @NotNull
   List<VLayoutInputDeclaration> getInputDeclarationList();
 
-  @NotNull
-  PsiElement getId();
-
 }

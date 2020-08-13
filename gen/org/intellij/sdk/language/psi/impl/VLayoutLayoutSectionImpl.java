@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.intellij.sdk.language.psi.VLayoutTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.intellij.sdk.language.psi.*;
 
-public class VLayoutLayoutSectionImpl extends ASTWrapperPsiElement implements VLayoutLayoutSection {
+public class VLayoutLayoutSectionImpl extends VLayoutLayoutSectionMixin implements VLayoutLayoutSection {
 
   public VLayoutLayoutSectionImpl(@NotNull ASTNode node) {
     super(node);

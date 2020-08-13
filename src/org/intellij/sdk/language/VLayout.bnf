@@ -41,9 +41,10 @@
       RIGHT_PAREN=")"
       CONST_TRUE="true"
       CONST_FALSE="false"
+      LOCALIZED="@"
       space="regexp:\s+"
-      id="regexp:\w+"
-      string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
+      id="regexp:[\p{Alpha}_]\w*"
+      string="regexp:(\"([^\"\\]|\\\"|\\\'|\\)*\")"
       number="regexp:\d+(\.\d*)?"
       color="regexp:#([\dabcdefABCDEF]){6}"
       line_comment="regexp://.*"
@@ -52,9 +53,11 @@
 
 VLayoutFile ::= !<<eof>> topDeclaration *
 
-topDeclaration ::= bindingsSection | typesSection | inputsSection | propertiesSection | functionsSection | layoutSection
+private topDeclaration ::= bindingsSection | typesSection | inputsSection | propertiesSection | functionsSection | layoutSection
 
-bindingsSection ::= 'bindings' LEFT_BRACE bindingDeclaration * RIGHT_BRACE
+bindingsSection ::= 'bindings' LEFT_BRACE bindingDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutBindingsSectionMixin"
+}
 
 bindingDeclaration ::= id OP_COLON viewType {
     pin=1
@@ -68,47 +71,88 @@ private pairRecover ::= OP_COLON
 
 viewType ::= id
 
-typesSection ::= 'types' LEFT_BRACE typeDeclaration * RIGHT_BRACE
+typesSection ::= 'types' LEFT_BRACE typeDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutTypesSectionMixin"
+}
 
-typeDeclaration ::= enumDeclaration | listDeclaration
+typeDeclaration ::= id OP_COLON (enumDeclaration | listDeclaration) {
+    pin=1
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutTypeDeclarationMixin"
+}
 
-enumDeclaration ::= id OP_COLON 'enum' LEFT_PAREN enumItems * RIGHT_PAREN
+enumDeclaration ::= 'enum' LEFT_PAREN enumItems * RIGHT_PAREN {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutEnumDeclarationMixin"
+}
 
-private enumItems ::= <<comma_separated_list id>>
+private enumItems ::= <<comma_separated_list enumElement>>
 
-listDeclaration ::= id OP_COLON 'list' LEFT_PAREN listPrototype * RIGHT_PAREN
+enumElement ::= id {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutEnumElementMixin"
+}
 
-private listPrototype ::= <<comma_separated_list complexType>>
+listDeclaration ::= 'list' LEFT_PAREN listPrototype * RIGHT_PAREN {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutListDeclarationMixin"
+}
 
-complexType ::= id LEFT_BRACE (complexType|simpleType) * RIGHT_BRACE
+private listPrototype ::= <<comma_separated_list prototypeDescription>>
 
-simpleType ::= id OP_COLON id
+prototypeDescription ::= id complexPrototypeContent {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutPrototypeDescriptionMixin"
+}
 
-inputsSection ::= 'inputs' LEFT_BRACE inputDeclaration * RIGHT_BRACE
+complexPrototypeContent ::= LEFT_BRACE prototypeContent * RIGHT_BRACE
 
-inputDeclaration ::= simpleInput | complexInput
+prototypeContent ::= id (complexPrototypeContent|simplePrototypeContent) {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutPrototypeContentMixin"
+}
 
-simpleInput ::= id OP_COLON id
+simplePrototypeContent ::= OP_COLON id {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutSimplePrototypeContentMixin"
+}
 
-complexInput ::= id LEFT_BRACE inputDeclaration * RIGHT_BRACE
+inputsSection ::= 'inputs' LEFT_BRACE inputDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutInputsSectionMixin"
+}
 
-propertiesSection ::= 'properties' LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+inputDeclaration ::= id (simpleInput | complexInput) {
+    pin=1
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutInputDeclarationMixin"
+}
 
-propertyDeclaration ::= simplePropertyDeclaration | complexPropertyDeclaration
+simpleInput ::= OP_COLON id {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutSimpleInputDeclarationMixin"
+}
 
-complexPropertyDeclaration ::= id LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+complexInput ::= LEFT_BRACE inputDeclaration * RIGHT_BRACE
 
-simplePropertyDeclaration ::= id OP_COLON expr
 
-functionsSection ::= 'functions' LEFT_BRACE functionDeclaration * RIGHT_BRACE
+propertiesSection ::= 'properties' LEFT_BRACE propertyDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutPropertiesSectionMixin"
+}
+
+propertyDeclaration ::= id (simplePropertyDeclaration | complexPropertyDeclaration){
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutPropertyDeclarationMixin"
+}
+
+complexPropertyDeclaration ::= LEFT_BRACE propertyDeclaration * RIGHT_BRACE
+
+simplePropertyDeclaration ::= OP_COLON expr
+
+functionsSection ::= 'functions' LEFT_BRACE functionDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutFunctionsSectionMixin"
+}
 
 functionDeclaration ::= id LEFT_PAREN <<comma_separated_list functionParameter>> RIGHT_PAREN '=>' expr
 
 functionParameter ::= id OP_COLON id
 
-layoutSection ::= 'layout' LEFT_BRACE (viewDeclaration | include) * RIGHT_BRACE
+layoutSection ::= 'layout' LEFT_BRACE (viewDeclaration | include) * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutLayoutSectionMixin"
+}
 
-viewDeclaration ::= id LEFT_BRACE (include|viewPropertyDeclaration|viewDeclaration) * RIGHT_BRACE
+viewDeclaration ::= id LEFT_BRACE (include|viewPropertyDeclaration|viewDeclaration) * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutViewDeclarationMixin"
+}
 
 viewPropertyDeclaration ::= simpleViewProperty | complexViewProperty
 
@@ -116,7 +160,7 @@ simpleViewProperty ::= id OP_COLON expr
 
 complexViewProperty ::= propertyKey LEFT_BRACE simpleViewProperty * RIGHT_BRACE
 
-propertyKey ::= 'padding'|'size'|'fixedSize'|'contentPadding'
+propertyKey ::= 'padding'|'size'|'fixedSize'|'contentPadding'|'center'
 
 include ::= 'include' OP_COLON string
 
@@ -177,6 +221,6 @@ variableReference ::= refPathList
 
 private refPathList ::= (id OP_DOT refPathList) | id
 
-functionCall ::= (id|'@') LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN
+functionCall ::= (id|LOCALIZED) LEFT_PAREN <<comma_separated_list expr>> RIGHT_PAREN
 
 meta comma_separated_list ::= <<param>> ( ',' <<param>> ) *

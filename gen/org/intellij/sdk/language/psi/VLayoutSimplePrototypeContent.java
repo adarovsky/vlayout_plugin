@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VLayoutInnerExpr extends PsiElement {
+public interface VLayoutSimplePrototypeContent extends PsiElement {
 
   @NotNull
-  VLayoutExpr getExpr();
+  PsiElement getId();
 
 }

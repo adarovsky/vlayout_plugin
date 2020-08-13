@@ -39,7 +39,7 @@ public class VLayoutVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitComplexType(@NotNull VLayoutComplexType o) {
+  public void visitComplexPrototypeContent(@NotNull VLayoutComplexPrototypeContent o) {
     visitPsiElement(o);
   }
 
@@ -56,6 +56,10 @@ public class VLayoutVisitor extends PsiElementVisitor {
   }
 
   public void visitEnumDeclaration(@NotNull VLayoutEnumDeclaration o) {
+    visitPsiElement(o);
+  }
+
+  public void visitEnumElement(@NotNull VLayoutEnumElement o) {
     visitPsiElement(o);
   }
 
@@ -131,6 +135,14 @@ public class VLayoutVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitPrototypeContent(@NotNull VLayoutPrototypeContent o) {
+    visitPsiElement(o);
+  }
+
+  public void visitPrototypeDescription(@NotNull VLayoutPrototypeDescription o) {
+    visitPsiElement(o);
+  }
+
   public void visitReferenceExpr(@NotNull VLayoutReferenceExpr o) {
     visitPsiElement(o);
   }
@@ -151,7 +163,7 @@ public class VLayoutVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitSimpleType(@NotNull VLayoutSimpleType o) {
+  public void visitSimplePrototypeContent(@NotNull VLayoutSimplePrototypeContent o) {
     visitPsiElement(o);
   }
 
@@ -168,10 +180,6 @@ public class VLayoutVisitor extends PsiElementVisitor {
   }
 
   public void visitTokenExpr(@NotNull VLayoutTokenExpr o) {
-    visitPsiElement(o);
-  }
-
-  public void visitTopDeclaration(@NotNull VLayoutTopDeclaration o) {
     visitPsiElement(o);
   }
 

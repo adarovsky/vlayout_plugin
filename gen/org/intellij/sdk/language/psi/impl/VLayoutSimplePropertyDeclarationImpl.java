@@ -32,10 +32,4 @@ public class VLayoutSimplePropertyDeclarationImpl extends ASTWrapperPsiElement i
     return findNotNullChildByClass(VLayoutExpr.class);
   }
 
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
-  }
-
 }

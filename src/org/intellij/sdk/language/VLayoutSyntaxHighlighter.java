@@ -20,6 +20,22 @@ public class VLayoutSyntaxHighlighter extends SyntaxHighlighterBase {
             createTextAttributesKey("VLAYOUT_STRING", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey NUMBER =
             createTextAttributesKey("VLAYOUT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
+    public static final TextAttributesKey BINDING =
+            createTextAttributesKey("VLAYOUT_BINDING", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
+    public static final TextAttributesKey PREDEFINED_VIEW =
+            createTextAttributesKey("VLAYOUT_PREDEFINED_VIEW", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
+    public static final TextAttributesKey INPUT =
+            createTextAttributesKey("VLAYOUT_INPUT", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
+    public static final TextAttributesKey PROPERTY =
+            createTextAttributesKey("VLAYOUT_PROPERTY", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
+    public static final TextAttributesKey PROTOTYPE_NAME =
+            createTextAttributesKey("VLAYOUT_PROTOTYPE_NAME", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
+    public static final TextAttributesKey ENUM_ELEMENT =
+            createTextAttributesKey("VLAYOUT_ENUM_ELEMENT", DefaultLanguageHighlighterColors.CONSTANT);
+    public static final TextAttributesKey TYPE_NAME =
+            createTextAttributesKey("VLAYOUT_TYPE_NAME", DefaultLanguageHighlighterColors.CLASS_NAME);
+    public static final TextAttributesKey TYPE_REFERENCE =
+            createTextAttributesKey("VLAYOUT_TYPE_REFERENCE", DefaultLanguageHighlighterColors.CLASS_REFERENCE);
     public static final TextAttributesKey COMMENT =
             createTextAttributesKey("VLAYOUT_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey BAD_CHARACTER =
