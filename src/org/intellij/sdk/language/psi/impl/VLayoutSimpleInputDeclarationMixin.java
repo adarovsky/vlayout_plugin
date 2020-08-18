@@ -8,17 +8,20 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
+import org.intellij.sdk.language.VLayoutBindingReference;
 import org.intellij.sdk.language.VLayoutSyntaxHighlighter;
-import org.intellij.sdk.language.psi.VLayoutBindingDeclaration;
-import org.intellij.sdk.language.psi.VLayoutElementFactory;
-import org.intellij.sdk.language.psi.VLayoutNamedElement;
-import org.intellij.sdk.language.psi.VLayoutSelfAnnotating;
+import org.intellij.sdk.language.VLayoutTypeReference;
+import org.intellij.sdk.language.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
+import static org.intellij.sdk.language.psi.impl.VLayoutTypeDeclarationMixin.PREDEFINED_TYPES;
 
 public class VLayoutSimpleInputDeclarationMixin extends ASTWrapperPsiElement implements VLayoutSelfAnnotating {
     public VLayoutSimpleInputDeclarationMixin(@NotNull ASTNode node) {
@@ -41,4 +44,15 @@ public class VLayoutSimpleInputDeclarationMixin extends ASTWrapperPsiElement imp
     public String getDescriptiveName() {
         return getFirstChild().getText();
     }
+
+    @Override
+    public PsiReference getReference() {
+        String text = getLastChild().getText();
+        if (Arrays.asList(PREDEFINED_TYPES).contains(text)) {
+            return super.getReference();
+        }
+        TextRange range = getLastChild().getTextRangeInParent();
+        return new VLayoutTypeReference((VLayoutSimpleInput) this, range);
+    }
+
 }

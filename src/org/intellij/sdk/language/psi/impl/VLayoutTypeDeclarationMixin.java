@@ -18,15 +18,9 @@ import java.util.List;
 
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
-public class VLayoutTypeDeclarationMixin extends ASTWrapperPsiElement implements VLayoutNamedElement, VLayoutSelfAnnotating, NavigatablePsiElement {
+public class VLayoutTypeDeclarationMixin extends VLayoutNamedBaseMixin implements VLayoutSelfAnnotating, NavigatablePsiElement {
     public VLayoutTypeDeclarationMixin(@NotNull ASTNode node) {
         super(node);
-    }
-
-    @Nullable
-    @Override
-    public PsiElement getNameIdentifier() {
-        return getFirstChild();
     }
 
     @Override
@@ -41,13 +35,6 @@ public class VLayoutTypeDeclarationMixin extends ASTWrapperPsiElement implements
         }
 
         return String.join(".", names);
-    }
-
-    @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        VLayoutBindingDeclaration b = VLayoutElementFactory.createBinding(getProject(), s, getLastChild().getText());
-
-        return b.getFirstChild();
     }
 
     @Override
@@ -72,4 +59,9 @@ public class VLayoutTypeDeclarationMixin extends ASTWrapperPsiElement implements
         return getName();
     }
 
+    public static final String[] PREDEFINED_TYPES = {
+            "Bool",
+            "String",
+            "Number"
+    };
 }

@@ -20,25 +20,9 @@ import java.util.Arrays;
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
-public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement implements VLayoutNamedElement, VLayoutSelfAnnotating, NavigatablePsiElement {
+public class VLayoutBindingDeclarationMixin extends VLayoutNamedBaseMixin implements VLayoutSelfAnnotating, NavigatablePsiElement {
     public VLayoutBindingDeclarationMixin(@NotNull ASTNode node) {
         super(node);
-    }
-
-    @Nullable
-    @Override
-    public PsiElement getNameIdentifier() {
-        return getFirstChild();
-    }
-
-    @Override
-    public String getName() {
-        return getFirstChild().getText();
-    }
-
-    @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        return VLayoutPsiImplUtil.setName(this, s);
     }
 
     @Override
@@ -61,7 +45,6 @@ public class VLayoutBindingDeclarationMixin extends ASTWrapperPsiElement impleme
     public ItemPresentation getPresentation() {
         return VLayoutPsiImplUtil.getPresentation(this);
     }
-
 
     @Override
     public String getType() {

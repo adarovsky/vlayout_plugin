@@ -77,6 +77,7 @@ typesSection ::= 'types' LEFT_BRACE typeDeclaration * RIGHT_BRACE {
 typeDeclaration ::= id OP_COLON (enumDeclaration | listDeclaration) {
     pin=1
     mixin="org.intellij.sdk.language.psi.impl.VLayoutTypeDeclarationMixin"
+    implements="org.intellij.sdk.language.psi.VLayoutNamedElement"
 }
 
 enumDeclaration ::= 'enum' LEFT_PAREN enumItems * RIGHT_PAREN {
@@ -99,7 +100,9 @@ prototypeDescription ::= id complexPrototypeContent {
     mixin="org.intellij.sdk.language.psi.impl.VLayoutPrototypeDescriptionMixin"
 }
 
-complexPrototypeContent ::= LEFT_BRACE prototypeContent * RIGHT_BRACE
+complexPrototypeContent ::= LEFT_BRACE prototypeContent * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutComplexBodyMixin"
+}
 
 prototypeContent ::= id (complexPrototypeContent|simplePrototypeContent) {
     mixin="org.intellij.sdk.language.psi.impl.VLayoutPrototypeContentMixin"
@@ -122,7 +125,9 @@ simpleInput ::= OP_COLON id {
     mixin="org.intellij.sdk.language.psi.impl.VLayoutSimpleInputDeclarationMixin"
 }
 
-complexInput ::= LEFT_BRACE inputDeclaration * RIGHT_BRACE
+complexInput ::= LEFT_BRACE inputDeclaration * RIGHT_BRACE {
+    mixin="org.intellij.sdk.language.psi.impl.VLayoutComplexBodyMixin"
+}
 
 
 propertiesSection ::= 'properties' LEFT_BRACE propertyDeclaration * RIGHT_BRACE {

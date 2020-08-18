@@ -184,7 +184,7 @@ public class VLayoutVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeDeclaration(@NotNull VLayoutTypeDeclaration o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitTypesSection(@NotNull VLayoutTypesSection o) {

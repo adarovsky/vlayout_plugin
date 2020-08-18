@@ -20,25 +20,9 @@ import java.util.List;
 
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
-public class VLayoutPrototypeDescriptionMixin extends ASTWrapperPsiElement implements VLayoutNamedElement, VLayoutSelfAnnotating, NavigatablePsiElement {
+public class VLayoutPrototypeDescriptionMixin extends VLayoutNamedBaseMixin implements VLayoutSelfAnnotating, NavigatablePsiElement {
     public VLayoutPrototypeDescriptionMixin(@NotNull ASTNode node) {
         super(node);
-    }
-
-    @Nullable
-    @Override
-    public PsiElement getNameIdentifier() {
-        return getFirstChild();
-    }
-
-    @Override
-    public String getName() {
-        return getFirstChild().getText();
-    }
-
-    @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        throw new IncorrectOperationException();
     }
 
     @Override

@@ -19,7 +19,6 @@ import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
 
 public class VLayoutAnnotator implements Annotator {
-
     @Override
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         // Ensure the Psi Element is an expression

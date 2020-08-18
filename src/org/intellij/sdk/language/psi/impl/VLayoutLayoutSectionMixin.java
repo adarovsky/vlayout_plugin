@@ -6,7 +6,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
 import org.jetbrains.annotations.NotNull;
 
-public class VLayoutLayoutSectionMixin extends ASTWrapperPsiElement implements NavigatablePsiElement {
+public class VLayoutLayoutSectionMixin extends VLayoutComplexBodyMixin implements NavigatablePsiElement {
     public VLayoutLayoutSectionMixin(@NotNull ASTNode node) {
         super(node);
     }

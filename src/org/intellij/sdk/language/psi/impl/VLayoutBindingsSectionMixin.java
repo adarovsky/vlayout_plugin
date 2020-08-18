@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
-public class VLayoutBindingsSectionMixin extends ASTWrapperPsiElement implements NavigatablePsiElement, VLayoutSelfAnnotating {
+public class VLayoutBindingsSectionMixin extends VLayoutComplexBodyMixin implements NavigatablePsiElement, VLayoutSelfAnnotating {
     public VLayoutBindingsSectionMixin(@NotNull ASTNode node) {
         super(node);
     }
@@ -37,7 +37,6 @@ public class VLayoutBindingsSectionMixin extends ASTWrapperPsiElement implements
         TextRange nameRange = getFirstChild().getTextRange();
         holder.newAnnotation(INFORMATION, "").range(nameRange).textAttributes(VLayoutSyntaxHighlighter.KEYWORD).create();
     }
-
 
     @Override
     public String getType() {

@@ -13,10 +13,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.intellij.sdk.language.VLayoutFileType;
 import org.intellij.sdk.language.VLayoutStructureViewElement;
-import org.intellij.sdk.language.psi.VLayoutBindingDeclaration;
-import org.intellij.sdk.language.psi.VLayoutElementFactory;
-import org.intellij.sdk.language.psi.VLayoutFile;
-import org.intellij.sdk.language.psi.VLayoutTypes;
+import org.intellij.sdk.language.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +30,13 @@ public class VLayoutPsiImplUtil {
         element.getNode().replaceChild(element.getFirstChild().getNode(), b.getNode());
         return b;
     }
+
+    public static PsiElement setLastName(PsiElement element, String newElementName) {
+        PsiElement b = VLayoutElementFactory.createName(element.getProject(), newElementName);
+        element.getNode().replaceChild(element.getLastChild().getNode(), b.getNode());
+        return b;
+    }
+
     public static ItemPresentation getPresentation(final NavigatablePsiElement element) {
         return new ItemPresentation() {
             @Nullable
@@ -106,5 +110,18 @@ public class VLayoutPsiImplUtil {
             }
         }
         return bindings.toArray(new VLayoutBindingDeclaration[0]);
+    }
+
+    public static VLayoutTypeDeclaration[] getTypes(@NotNull PsiElement element, String name) {
+        Collection<VLayoutTypeDeclaration> types = new ArrayList<>();
+        for (VLayoutFile file : getReferencingFiles(element)) {
+            Collection<VLayoutTypeDeclaration> d = PsiTreeUtil.findChildrenOfType(file, VLayoutTypeDeclaration.class);
+            for (VLayoutTypeDeclaration i : d) {
+                if (Objects.equals(i.getName(), name)) {
+                    types.add(i);
+                }
+            }
+        }
+        return types.toArray(new VLayoutTypeDeclaration[0]);
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface VLayoutTypeDeclaration extends PsiElement {
+public interface VLayoutTypeDeclaration extends VLayoutNamedElement {
 
   @Nullable
   VLayoutEnumDeclaration getEnumDeclaration();
