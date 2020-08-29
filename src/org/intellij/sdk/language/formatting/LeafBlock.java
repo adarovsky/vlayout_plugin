@@ -78,4 +78,12 @@ class LeafBlock implements ASTBlock {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "LeafBlock{" +
+                "node=" + node +
+                ", alignment=" + alignment +
+                ", myIndent=" + myIndent +
+                '}';
+    }
 }

@@ -46,8 +46,8 @@ public class VLayoutTypeReference extends PsiReferenceBase<VLayoutSimpleInput> {
         return Arrays
                 .stream(types)
                 .map(binding -> LookupElementBuilder
-                                .create(binding).withIcon(VLayoutIcons.FILE)
-                                .withTypeText(binding.getContainingFile().getName()))
+                        .create(binding).withIcon(VLayoutIcons.FILE)
+                        .withTypeText(binding.getContainingFile().getName()))
                 .toArray();
     }
 

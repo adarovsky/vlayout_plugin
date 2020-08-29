@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import static com.intellij.lang.annotation.HighlightSeverity.INFORMATION;
 
 
-public class VLayoutPropertiesSectionMixin extends ASTWrapperPsiElement implements NavigatablePsiElement, VLayoutSelfAnnotating {
+public class VLayoutPropertiesSectionMixin extends VLayoutComplexBodyMixin implements NavigatablePsiElement, VLayoutSelfAnnotating {
     public VLayoutPropertiesSectionMixin(@NotNull ASTNode node) {
         super(node);
     }

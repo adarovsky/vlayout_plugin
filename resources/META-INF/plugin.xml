@@ -54,6 +54,8 @@
     <lang.refactoringSupport language="VLayout"
                              implementationClass="org.intellij.sdk.language.VLayoutRefactoringSupportProvider"/>
 
+    <lang.formatter language="VLayout"
+                    implementationClass="org.intellij.sdk.language.formatting.VLayoutFormattingModelBuilder"/>
   </extensions>
 
   <actions>

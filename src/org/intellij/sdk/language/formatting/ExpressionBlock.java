@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static org.intellij.sdk.language.psi.VLayoutTypes.*;
 
-public class ContainerBlock extends AbstractBlock {
+public class ExpressionBlock extends AbstractBlock {
     public static final Spacing NEW_LINE = Spacing.createSpacing(0, 0, 1, true, 2);
     public static final Spacing SPACE = Spacing.createSpacing(1, 1, 0, false, 0);
     public static final Spacing SPACE_OR_NEW_LINE = Spacing.createSpacing(1, 1, 0, true, 1);
@@ -30,7 +30,7 @@ public class ContainerBlock extends AbstractBlock {
 
     private Alignment childAlignment;
     private CodeStyleSettings settings;
-    public ContainerBlock(@NotNull ASTNode node, @Nullable Alignment alignment,
+    public ExpressionBlock(@NotNull ASTNode node, @Nullable Alignment alignment,
                           Indent indent, CodeStyleSettings settings) {
         super(node, null, alignment);
         childAlignment = Alignment.createAlignment();
@@ -49,28 +49,22 @@ public class ContainerBlock extends AbstractBlock {
     @Override
     protected List<Block> buildChildren() {
         ASTNode child = getNode().getFirstChildNode();
-        State state = State.BEFORE_LEFT_CURLY_BRACE;
+        State state = State.BEFORE_COLON;
         List<Block> result = new ArrayList<>();
         while (child != null) {
             if (!FormatterUtil.containsWhiteSpacesOnly(child)) {
                 IElementType elementType = child.getElementType();
-                if (VLayoutTypes.LEFT_BRACE.equals(elementType)) {
-                    state = State.AFTER_LEFT_CURLY_BRACE;
+                if (OP_COLON.equals(elementType)) {
+                    state = State.AFTER_COLON;
                     result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
-                } else if (VLayoutTypes.RIGHT_BRACE.equals(elementType)) {
-                    result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
-                    state = State.AFTER_RIGHT_CURLY_BRACE;
                 } else {
                     switch (state) {
-                        case BEFORE_LEFT_CURLY_BRACE:
+                        case BEFORE_COLON:
                             Block block = createBlock(child, myAlignment, Indent.getNoneIndent(), settings);
                             result.add(block);
                             break;
-                        case AFTER_LEFT_CURLY_BRACE:
-                            result.add(createBlock(child, childAlignment, Indent.getNormalIndent(true), settings));
-                            break;
-                        case AFTER_RIGHT_CURLY_BRACE:
-                            result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
+                        case AFTER_COLON:
+                            result.add(createBlock(child, childAlignment, Indent.getSmartIndent(Indent.Type.CONTINUATION_WITHOUT_FIRST), settings));
                             break;
                         default:
                             throw new IllegalStateException(state.toString());
@@ -107,7 +101,7 @@ public class ContainerBlock extends AbstractBlock {
             System.out.println("child1: " + (child1 != null ? child1.toString() : "null") + ", child2: " + child2.toString());
             ASTBlock block = (ASTBlock) child2;
             // Do not move semicolon after '}' to new line.
-            IElementType elementType = block.getNode().getElementType();
+            IElementType elementType = Objects.requireNonNull(block.getNode()).getElementType();
             // Do not move trailing comments to new line.
             if (LINE_COMMENT.equals(elementType)) {
                 return SPACE_OR_NEW_LINE;
@@ -125,7 +119,7 @@ public class ContainerBlock extends AbstractBlock {
     @Nullable
     @Override
     protected Indent getChildIndent() {
-        return Indent.getNormalIndent();
+        return Indent.getNoneIndent();
     }
 
     @Override
@@ -134,8 +128,7 @@ public class ContainerBlock extends AbstractBlock {
     }
 
     private enum State {
-        BEFORE_LEFT_CURLY_BRACE,
-        AFTER_LEFT_CURLY_BRACE,
-        AFTER_RIGHT_CURLY_BRACE
+        BEFORE_COLON,
+        AFTER_COLON
     }
 }

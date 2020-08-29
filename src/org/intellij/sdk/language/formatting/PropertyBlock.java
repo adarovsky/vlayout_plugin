@@ -1,27 +1,21 @@
 package org.intellij.sdk.language.formatting;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.ChildAttributes;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
+import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import com.intellij.psi.formatter.java.BlockFactory;
 import com.intellij.psi.tree.IElementType;
-
-import java.util.*;
-
-import org.intellij.sdk.language.psi.VLayoutTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import static org.intellij.sdk.language.psi.VLayoutTypes.*;
 
-public class ContainerBlock extends AbstractBlock {
+public class PropertyBlock extends AbstractBlock {
     public static final Spacing NEW_LINE = Spacing.createSpacing(0, 0, 1, true, 2);
     public static final Spacing SPACE = Spacing.createSpacing(1, 1, 0, false, 0);
     public static final Spacing SPACE_OR_NEW_LINE = Spacing.createSpacing(1, 1, 0, true, 1);
@@ -30,11 +24,14 @@ public class ContainerBlock extends AbstractBlock {
 
     private Alignment childAlignment;
     private CodeStyleSettings settings;
-    public ContainerBlock(@NotNull ASTNode node, @Nullable Alignment alignment,
-                          Indent indent, CodeStyleSettings settings) {
+    private Indent myIndent;
+    public PropertyBlock(@NotNull ASTNode node, @Nullable Alignment alignment,
+                         Indent indent, CodeStyleSettings settings) {
         super(node, null, alignment);
         childAlignment = Alignment.createAlignment();
         this.settings = settings;
+        myIndent = indent;
+        System.out.println("PropertyBlock(" + node.toString() + ", indent: " + indent.toString());
     }
 
     private Block createBlock(@NotNull ASTNode element, @Nullable Alignment alignment,
@@ -49,28 +46,22 @@ public class ContainerBlock extends AbstractBlock {
     @Override
     protected List<Block> buildChildren() {
         ASTNode child = getNode().getFirstChildNode();
-        State state = State.BEFORE_LEFT_CURLY_BRACE;
+        State state = State.BEFORE_COLON;
         List<Block> result = new ArrayList<>();
         while (child != null) {
             if (!FormatterUtil.containsWhiteSpacesOnly(child)) {
                 IElementType elementType = child.getElementType();
-                if (VLayoutTypes.LEFT_BRACE.equals(elementType)) {
-                    state = State.AFTER_LEFT_CURLY_BRACE;
+                if (OP_COLON.equals(elementType)) {
+                    state = State.AFTER_COLON;
                     result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
-                } else if (VLayoutTypes.RIGHT_BRACE.equals(elementType)) {
-                    result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
-                    state = State.AFTER_RIGHT_CURLY_BRACE;
                 } else {
                     switch (state) {
-                        case BEFORE_LEFT_CURLY_BRACE:
+                        case BEFORE_COLON:
                             Block block = createBlock(child, myAlignment, Indent.getNoneIndent(), settings);
                             result.add(block);
                             break;
-                        case AFTER_LEFT_CURLY_BRACE:
-                            result.add(createBlock(child, childAlignment, Indent.getNormalIndent(true), settings));
-                            break;
-                        case AFTER_RIGHT_CURLY_BRACE:
-                            result.add(createBlock(child, myAlignment, Indent.getNoneIndent(), settings));
+                        case AFTER_COLON:
+                            result.add(createBlock(child, childAlignment, Indent.getSmartIndent(Indent.Type.CONTINUATION_WITHOUT_FIRST), settings));
                             break;
                         default:
                             throw new IllegalStateException(state.toString());
@@ -103,17 +94,13 @@ public class ContainerBlock extends AbstractBlock {
                 return SPACE;
             }
         }
-        else if (child2 instanceof ASTBlock) {
-            System.out.println("child1: " + (child1 != null ? child1.toString() : "null") + ", child2: " + child2.toString());
-            ASTBlock block = (ASTBlock) child2;
-            // Do not move semicolon after '}' to new line.
-            IElementType elementType = block.getNode().getElementType();
-            // Do not move trailing comments to new line.
-            if (LINE_COMMENT.equals(elementType)) {
-                return SPACE_OR_NEW_LINE;
-            }
-        }
+
         return NEW_LINE;
+    }
+
+    @Override
+    public Indent getIndent() {
+        return myIndent;
     }
 
     @NotNull
@@ -133,9 +120,17 @@ public class ContainerBlock extends AbstractBlock {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "PropertyBlock{" +
+                "node=" + myNode +
+                ", alignment=" + myAlignment +
+                ", myIndent=" + getIndent() +
+                '}';
+    }
+
     private enum State {
-        BEFORE_LEFT_CURLY_BRACE,
-        AFTER_LEFT_CURLY_BRACE,
-        AFTER_RIGHT_CURLY_BRACE
+        BEFORE_COLON,
+        AFTER_COLON
     }
 }
